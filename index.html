@@ -3,52 +3,534 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>মন্ডল ফিশ এন্ড এগ্রো</title>
-    <link rel="stylesheet" href="css/style.css">
+    <title>মন্ডল ফিশ এন্ড এগ্রো - এডমিন প্যানেল</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+        }
+
+        header {
+            background: linear-gradient(135deg, #2c5f2d, #1e3f1e);
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        nav ul {
+            display: flex;
+            list-style: none;
+            gap: 2rem;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+            padding: 0.5rem 1rem;
+            border-radius: 4px;
+        }
+
+        nav ul li a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #ffd700;
+        }
+
+        .admin-badge {
+            background: #ffd700;
+            color: #1e3f1e;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: bold;
+            margin-left: 1rem;
+        }
+
+        main {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 20px;
+        }
+
+        /* Slideshow Styles */
+        .slideshow-container {
+            position: relative;
+            max-width: 100%;
+            height: 400px;
+            overflow: hidden;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+            margin-bottom: 3rem;
+        }
+
+        .mySlides {
+            display: none;
+            position: relative;
+            height: 100%;
+        }
+
+        .mySlides img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .mySlides .text {
+            position: absolute;
+            bottom: 50px;
+            left: 0;
+            right: 0;
+            text-align: center;
+            color: white;
+            font-size: 2rem;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.7);
+            background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            padding: 2rem;
+        }
+
+        .prev, .next {
+            cursor: pointer;
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: auto;
+            padding: 16px;
+            color: white;
+            font-weight: bold;
+            font-size: 1.5rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 0 3px 3px 0;
+            transition: background 0.3s;
+        }
+
+        .next {
+            right: 0;
+            border-radius: 3px 0 0 3px;
+        }
+
+        .prev:hover, .next:hover {
+            background: rgba(0,0,0,0.8);
+        }
+
+        /* Products Section */
+        .featured-products {
+            margin: 3rem 0;
+        }
+
+        .featured-products h2 {
+            text-align: center;
+            color: #2c5f2d;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            border-bottom: 3px solid #ffd700;
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        #product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            transition: transform 0.3s;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+
+        .product-card img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+        }
+
+        .product-info {
+            padding: 1.5rem;
+        }
+
+        .product-info h3 {
+            color: #2c5f2d;
+            margin-bottom: 0.5rem;
+        }
+
+        .product-price {
+            font-size: 1.25rem;
+            font-weight: bold;
+            color: #c47e1f;
+            margin: 0.5rem 0;
+        }
+
+        .buy-btn {
+            background: #2c5f2d;
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+            transition: background 0.3s;
+        }
+
+        .buy-btn:hover {
+            background: #1e3f1e;
+        }
+
+        .admin-controls {
+            padding: 1rem;
+            background: #f5f5f5;
+            border-top: 1px solid #ddd;
+        }
+
+        .edit-btn, .delete-btn {
+            padding: 0.25rem 0.5rem;
+            margin: 0 0.25rem;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+
+        .edit-btn {
+            background: #ffd700;
+            color: #333;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+        }
+
+        /* Admin Panel Styles */
+        .admin-panel {
+            background: #f9f9f9;
+            border-radius: 10px;
+            padding: 2rem;
+            margin: 3rem 0;
+            border: 2px solid #2c5f2d;
+        }
+
+        .admin-panel h3 {
+            color: #2c5f2d;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .admin-tabs {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .tab-btn {
+            padding: 0.75rem 1.5rem;
+            background: white;
+            border: 2px solid #2c5f2d;
+            border-radius: 5px;
+            color: #2c5f2d;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #2c5f2d;
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-group input,
+        .form-group textarea,
+        .form-group select {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+        }
+
+        .form-group input:focus,
+        .form-group textarea:focus,
+        .form-group select:focus {
+            border-color: #2c5f2d;
+            outline: none;
+        }
+
+        .btn {
+            background: #2c5f2d;
+            color: white;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #1e3f1e;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-danger:hover {
+            background: #c82333;
+        }
+
+        .product-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .admin-product-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .admin-product-item:last-child {
+            border-bottom: none;
+        }
+
+        .admin-product-info h4 {
+            color: #2c5f2d;
+            margin-bottom: 0.25rem;
+        }
+
+        .admin-product-info p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+
+        .admin-product-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+
+        /* Contact Section */
+        .contact-section {
+            background: linear-gradient(135deg, #f5f5f5, #e8e8e8);
+            padding: 3rem;
+            border-radius: 10px;
+            margin-top: 3rem;
+        }
+
+        .contact-section h2 {
+            color: #2c5f2d;
+            margin-bottom: 1.5rem;
+            font-size: 2rem;
+        }
+
+        .contact-section p {
+            margin: 0.75rem 0;
+            font-size: 1.1rem;
+        }
+
+        .contact-section strong {
+            color: #1e3f1e;
+        }
+
+        footer {
+            background: #1e3f1e;
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: #2c5f2d;
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 5px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            display: none;
+            z-index: 1000;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
         <nav>
-            <div class="logo">মন্ডল ফিশ এন্ড এগ্রো</div>
+            <div class="logo">
+                মন্ডল ফিশ এন্ড এগ্রো
+                <span class="admin-badge">এডমিন প্যানেল</span>
+            </div>
             <ul>
-                <li><a href="index.html">হোম</a></li>
-                <li><a href="products.html">পণ্যসমূহ</a></li>
-                <li><a href="cart.html">শপিং কার্ট</a></li>
+                <li><a href="#home">হোম</a></li>
+                <li><a href="#products">পণ্যসমূহ</a></li>
                 <li><a href="#contact">যোগাযোগ</a></li>
             </ul>
         </nav>
     </header>
 
     <main>
+        <!-- Slideshow Section -->
         <section class="slideshow-container">
             <div class="mySlides fade">
-                <img src="images/slide1.jpg" style="width:100%">
+                <img src="https://images.unsplash.com/photo-1524704654690-b56c05c78a00?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" style="width:100%">
                 <div class="text">উন্নত মানের ফিশ ফিড</div>
             </div>
             <div class="mySlides fade">
-                <img src="images/slide2.jpg" style="width:100%">
+                <img src="https://images.unsplash.com/photo-1546189466-e3903c4c2faa?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" style="width:100%">
                 <div class="text">গবাদি পশুর সুষম খাদ্য</div>
             </div>
             <div class="mySlides fade">
-                <img src="images/slide3.jpg" style="width:100%">
+                <img src="https://images.unsplash.com/photo-1574943320219-553eb213f72d?ixlib=rb-1.2.1&auto=format&fit=crop&w=1350&q=80" style="width:100%">
                 <div class="text">গুণগত মানসম্পন্ন ধানের বীজ</div>
             </div>
             <a class="prev" onclick="plusSlides(-1)">&#10094;</a>
             <a class="next" onclick="plusSlides(1)">&#10095;</a>
         </section>
 
+        <!-- Products Section -->
         <section class="featured-products">
-            <h2>আমাদের কিছু পণ্য</h2>
-            <div id="product-grid">
-                </div>
+            <h2>আমাদের পণ্যসমূহ</h2>
+            <div id="product-grid"></div>
         </section>
 
+        <!-- Admin Panel -->
+        <section class="admin-panel">
+            <h3>
+                <span>🔧 এডমিন প্যানেল</span>
+                <span style="font-size: 0.9rem; color: #666;">(পণ্য ব্যবস্থাপনা)</span>
+            </h3>
+            
+            <div class="admin-tabs">
+                <button class="tab-btn active" onclick="showTab('add')">➕ নতুন পণ্য যোগ করুন</button>
+                <button class="tab-btn" onclick="showTab('manage')">📋 পণ্য তালিকা পরিচালনা</button>
+            </div>
+
+            <!-- Add Product Tab -->
+            <div id="add-tab" class="tab-content active">
+                <form id="productForm">
+                    <div class="form-group">
+                        <label for="productName">পণ্যের নাম *</label>
+                        <input type="text" id="productName" required placeholder="যেমন: ফিশ ফিড">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productPrice">মূল্য (টাকা) *</label>
+                        <input type="number" id="productPrice" required placeholder="যেমন: ১৫০০">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productCategory">ক্যাটাগরি *</label>
+                        <select id="productCategory" required>
+                            <option value="">একটি ক্যাটাগরি নির্বাচন করুন</option>
+                            <option value="fish-feed">মাছের খাদ্য</option>
+                            <option value="cattle-feed">গবাদি পশুর খাদ্য</option>
+                            <option value="seeds">বীজ</option>
+                            <option value="fertilizer">সার</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productImage">ছবির URL *</label>
+                        <input type="url" id="productImage" required placeholder="https://example.com/image.jpg">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="productDescription">বিবরণ</label>
+                        <textarea id="productDescription" rows="3" placeholder="পণ্য সম্পর্কে বিস্তারিত লিখুন"></textarea>
+                    </div>
+                    
+                    <button type="submit" class="btn">✅ পণ্য যোগ করুন</button>
+                </form>
+            </div>
+
+            <!-- Manage Products Tab -->
+            <div id="manage-tab" class="tab-content">
+                <div class="product-list" id="adminProductList"></div>
+                <p style="text-align: center; margin-top: 1rem; color: #666;" id="emptyListMessage">কোনো পণ্য নেই। নতুন পণ্য যোগ করুন।</p>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
         <section id="contact" class="contact-section">
-            <h2>যোগাযোগ</h2>
-            <p><strong>ঠিকানা:</strong> টি. এন. টি. মোড়, নওগাঁ রোড, বদলগাছী, নওগাঁ।</p>
-            <p><strong>মোঃ নাজমুল সাকিব:</strong> ০১৮২৭ ৭৭৫৪৬১</p>
-            <p><strong>মোঃ সাগর হোসেন:</strong> ০১৮৭৯ ১৫১৫১৬</p>
-            <p><strong>বিশেষ সেবা:</strong> ২৪ ঘন্টা মাছের ডাক্তারের পরামর্শ পাওয়া যায়।</p>
+            <h2>যোগাযোগ করুন</h2>
+            <p><strong>🏢 ঠিকানা:</strong> টি. এন. টি. মোড়, নওগাঁ রোড, বদলগাছী, নওগাঁ।</p>
+            <p><strong>📞 মোঃ নাজমুল সাকিব:</strong> ০১৮২৭ ৭৭৫৪৬১</p>
+            <p><strong>📞 মোঃ সাগর হোসেন:</strong> ০১৮৭৯ ১৫১৫১৬</p>
+            <p><strong>🩺 বিশেষ সেবা:</strong> ২৪ ঘন্টা মাছের ডাক্তারের পরামর্শ পাওয়া যায়।</p>
         </section>
     </main>
 
@@ -56,6 +538,128 @@
         <p>&copy; 2025, মন্ডল ফিশ এন্ড এগ্রো। সর্বস্বত্ব সংরক্ষিত।</p>
     </footer>
 
-    <script src="js/app.js"></script>
-</body>
-</html>
+    <!-- Notification -->
+    <div id="notification" class="notification"></div>
+
+    <script>
+        // Slideshow functionality
+        let slideIndex = 1;
+        showSlides(slideIndex);
+
+        function plusSlides(n) {
+            showSlides(slideIndex += n);
+        }
+
+        function showSlides(n) {
+            let i;
+            let slides = document.getElementsByClassName("mySlides");
+            if (n > slides.length) {slideIndex = 1}
+            if (n < 1) {slideIndex = slides.length}
+            for (i = 0; i < slides.length; i++) {
+                slides[i].style.display = "none";
+            }
+            slides[slideIndex-1].style.display = "block";
+        }
+
+        // Auto advance slides
+        setInterval(() => {
+            plusSlides(1);
+        }, 5000);
+
+        // Admin Panel Tabs
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab-content');
+            const buttons = document.querySelectorAll('.tab-btn');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            buttons.forEach(btn => btn.classList.remove('active'));
+            
+            if (tabName === 'add') {
+                document.getElementById('add-tab').classList.add('active');
+                buttons[0].classList.add('active');
+            } else {
+                document.getElementById('manage-tab').classList.add('active');
+                buttons[1].classList.add('active');
+                displayAdminProducts();
+            }
+        }
+
+        // Product Management
+        let products = JSON.parse(localStorage.getItem('products')) || [
+            {
+                id: 1,
+                name: 'কমপ্লিট ফিশ ফিড',
+                price: 2500,
+                category: 'fish-feed',
+                image: 'https://images.unsplash.com/photo-1524704654690-b56c05c78a00?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+                description: 'উন্নত মানের মাছের খাদ্য, দ্রুত বৃদ্ধি নিশ্চিত করে'
+            },
+            {
+                id: 2,
+                name: 'গরুর পুষ্টিকর খাদ্য',
+                price: 1800,
+                category: 'cattle-feed',
+                image: 'https://images.unsplash.com/photo-1546189466-e3903c4c2faa?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+                description: 'গবাদি পশুর জন্য সুষম খাদ্য, দুধ উৎপাদন বৃদ্ধি করে'
+            },
+            {
+                id: 3,
+                name: 'উন্নত ধান বীজ',
+                price: 1200,
+                category: 'seeds',
+                image: 'https://images.unsplash.com/photo-1574943320219-553eb213f72d?ixlib=rb-1.2.1&auto=format&fit=crop&w=500&q=80',
+                description: 'উচ্চ ফলনশীল ধানের বীজ, রোগ প্রতিরোধ ক্ষমতা সম্পন্ন'
+            }
+        ];
+
+        // Save to localStorage
+        function saveProducts() {
+            localStorage.setItem('products', JSON.stringify(products));
+            displayProducts();
+            displayAdminProducts();
+        }
+
+        // Display products in grid
+        function displayProducts() {
+            const grid = document.getElementById('product-grid');
+            grid.innerHTML = '';
+            
+            products.forEach(product => {
+                const card = document.createElement('div');
+                card.className = 'product-card';
+                card.innerHTML = `
+                    <img src="${product.image}" alt="${product.name}">
+                    <div class="product-info">
+                        <h3>${product.name}</h3>
+                        <p>${product.description || ''}</p>
+                        <div class="product-price">৳ ${product.price}</div>
+                        <button class="buy-btn" onclick="buyProduct(${product.id})">অর্ডার করুন</button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Display products in admin list
+        function displayAdminProducts() {
+            const list = document.getElementById('adminProductList');
+            const emptyMsg = document.getElementById('emptyListMessage');
+            
+            if (products.length === 0) {
+                emptyMsg.style.display = 'block';
+                list.innerHTML = '';
+                return;
+            }
+            
+            emptyMsg.style.display = 'none';
+            list.innerHTML = '';
+            
+            products.forEach(product => {
+                const item = document.createElement('div');
+                item.className = 'admin-product-item';
+                item.innerHTML = `
+                    <div class="admin-product-info">
+                        <h4>${product.name}</h4>
+                        <p>মূল্য: ৳ ${product.price} | ক্যাটাগরি: ${product.category}</p>
+                    </div>
+    
