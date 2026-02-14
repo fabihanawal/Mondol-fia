@@ -640,7 +640,7 @@
             });
         }
 
-        // Display products in admin list
+         // Display products in admin list
         function displayAdminProducts() {
             const list = document.getElementById('adminProductList');
             const emptyMsg = document.getElementById('emptyListMessage');
@@ -662,4 +662,105 @@
                         <h4>${product.name}</h4>
                         <p>মূল্য: ৳ ${product.price} | ক্যাটাগরি: ${product.category}</p>
                     </div>
-    
+                    <div class="admin-product-actions">
+                        <button class="edit-btn" onclick="editProduct(${product.id})">✏️ এডিট</button>
+                        <button class="delete-btn" onclick="deleteProduct(${product.id})">🗑️ ডিলিট</button>
+                    </div>
+                `;
+                list.appendChild(item);
+            });
+        }
+
+        // Add new product
+        document.getElementById('productForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const newProduct = {
+                id: Date.now(),
+                name: document.getElementById('productName').value,
+                price: parseInt(document.getElementById('productPrice').value),
+                category: document.getElementById('productCategory').value,
+                image: document.getElementById('productImage').value,
+                description: document.getElementById('productDescription').value
+            };
+            
+            products.push(newProduct);
+            saveProducts();
+            
+            // Reset form
+            this.reset();
+            
+            // Show notification
+            showNotification('✅ পণ্য সফলভাবে যোগ করা হয়েছে!');
+            
+            // Switch to manage tab
+            showTab('manage');
+        });
+
+        // Delete product
+        function deleteProduct(id) {
+            if (confirm('আপনি কি এই পণ্যটি ডিলিট করতে চান?')) {
+                products = products.filter(p => p.id !== id);
+                saveProducts();
+                showNotification('🗑️ পণ্য ডিলিট করা হয়েছে');
+                
+                if (document.getElementById('manage-tab').classList.contains('active')) {
+                    displayAdminProducts();
+                }
+            }
+        }
+
+        // Edit product
+        function editProduct(id) {
+            const product = products.find(p => p.id === id);
+            if (!product) return;
+            
+            // Switch to add tab and populate form
+            showTab('add');
+            
+            document.getElementById('productName').value = product.name;
+            document.getElementById('productPrice').value = product.price;
+            document.getElementById('productCategory').value = product.category;
+            document.getElementById('productImage').value = product.image;
+            document.getElementById('productDescription').value = product.description || '';
+            
+            // Remove old product
+            products = products.filter(p => p.id !== id);
+            saveProducts();
+            
+            showNotification('✏️ পণ্যের তথ্য সম্পাদনা করুন');
+        }
+
+        // Buy product
+        function buyProduct(id) {
+            const product = products.find(p => p.id === id);
+            showNotification(`🛒 ${product.name} অর্ডার করা হয়েছে!`);
+        }
+
+        // Show notification
+        function showNotification(message) {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.style.display = 'block';
+            
+            setTimeout(() => {
+                notification.style.display = 'none';
+            }, 3000);
+        }
+
+        // Initial display
+        displayProducts();
+
+        // Handle admin login visibility (simple toggle for demo)
+        let adminVisible = true;
+        function toggleAdmin() {
+            const adminPanel = document.querySelector('.admin-panel');
+            adminPanel.style.display = adminVisible ? 'none' : 'block';
+            adminVisible = !adminVisible;
+        }
+
+        // Double-click logo to toggle admin panel
+        document.querySelector('.logo').addEventListener('dblclick', toggleAdmin);
+    </script>
+</body>
+</html>
